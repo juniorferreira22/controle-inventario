@@ -9,12 +9,12 @@ export async function POST(request: Request) {
 
   if (email !== process.env.INTERNAL_LOGIN_EMAIL?.toLowerCase() || password !== process.env.INTERNAL_LOGIN_PASSWORD) {
     if (wantsJson) return NextResponse.json({ error: "E-mail ou senha incorretos." }, { status: 401 });
-    return NextResponse.redirect(new URL("/login?error=1", request.url));
+    return NextResponse.redirect(new URL("/login?error=1", request.url), 303);
   }
 
   const response = wantsJson
     ? NextResponse.json({ ok: true })
-    : NextResponse.redirect(new URL("/", request.url));
+    : NextResponse.redirect(new URL("/", request.url), 303);
   response.cookies.set(sessionName, await createSession(email), {
     httpOnly: true,
     maxAge: 60 * 60 * 24 * 7,
